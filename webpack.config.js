@@ -117,9 +117,6 @@ if ( TARGET_ENV === 'production' ) {
           to:   'img/'
         },
         {
-          from: 'src/favicon.ico'
-        },
-        {
           from: 'src/sounds',
           to: 'sounds/'
         }
