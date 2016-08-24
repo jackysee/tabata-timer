@@ -51,11 +51,11 @@ init config =
     config' =
       case config of
           Just config -> config
-          Nothing -> { prepare = 5
-                     , work = 6
-                     , rest = 6
-                     , cycles = 2
-                     , tabata = 2
+          Nothing -> { prepare = 10
+                     , work = 20
+                     , rest = 10
+                     , cycles = 8
+                     , tabata = 1
                      }
     total' =  calculateTotal config'
   in (
