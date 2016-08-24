@@ -1,0 +1,168 @@
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/normalize";
+
+*{
+  box-sizing: border-box;
+}
+
+body{
+  // font-size: 14px;
+  font-size: calc(1em + 1vw);
+}
+
+.container{
+  position: relative;
+}
+
+.section-box{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  min-height: 600px;
+  width: 100vw;
+  transition: transform 0.4s ease-in-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  &.is-hidden{
+    transform: translateY(-100%);
+  }
+}
+
+.stage{
+
+  &.is-prepare{
+    background-color: #ececec;
+  }
+
+  &.is-work{
+    background-color: lighten(red, 30%);
+  }
+
+  &.is-rest{
+    background-color: lighten(#3D9970, 10%);
+  }
+}
+
+
+
+.config-row{
+  display: flex;
+  font-size: 2rem;
+  // line-height: 2.4rem;
+  height: 3.5rem;
+  align-items: center;
+}
+
+.config-label{
+  flex: 1;
+  line-height: 30px;
+  margin-right: 13px;
+}
+
+.config-input{
+  width: 14rem;
+}
+
+.int-input{
+  display: flex;
+  align-items: stretch;
+  height: 2.5rem;
+
+  button{
+    // border: 1px solid #ccc;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    background-color: transparent;
+    cursor: pointer;
+    width: 1.4em;
+
+    &:hover{
+      background: #ededed;
+    }
+
+    &:focus{
+      outline: none;
+    }
+  }
+
+  input{
+    width:4em;
+    text-align: center;
+    height: 100%;
+    flex: 1;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    background-color: transparent;
+    text-align: center;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    &:focus{
+      outline: none;
+      border-bottom-color: blue;
+    }
+  }
+}
+button[disabled]{
+  opacity: 0.5;
+}
+
+.duration{
+  // text-align: center;
+  margin: 1rem 0;
+}
+
+.duration-label{
+  font-size: 1.4rem;
+  margin-bottom: -0.4rem;
+}
+
+.duration-value{
+  font-size: 5rem;
+}
+
+.duration-time{
+  font-size: calc(10rem + 3vw);
+}
+
+.duration-num{
+  font-size: 5rem;
+}
+
+.duration-denom{
+  font-size: 1.4rem;
+  color: #444;
+}
+
+.stage-info-wrap{
+  display: flex;
+  // justify-content: space-between;
+}
+.stage-info{
+  width: 50%;
+}
+
+.buttons{
+  margin-top: 1rem;
+}
+.buttons .btn{
+  margin-bottom: 5px;
+}
+
+.btn{
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #777;
+  color: white;
+}
+.btn-lg{
+  width: 100%;
+  font-size: 1.4em;
+}
+.btn-start{
+  padding: 1rem;
+}
