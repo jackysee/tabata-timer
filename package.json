@@ -11,6 +11,7 @@
   "scripts": {
     "start": "webpack-dev-server --hot --inline --port 8888 --content-base src/",
     "build": "rimraf dist && webpack",
+    "build-page": "npm run build && cp -R dist docs",
     "watch": "webpack --watch"
   },
   "devDependencies": {
