@@ -301,14 +301,6 @@ renderStageLabel stage =
     Rest -> "Rest"
 
 
-renderDuration: String -> String -> Html Msg
-renderDuration label value =
-    div [class "duration"]
-     [ div [ class "duration-label" ] [ text label ]
-     , div [ class "duration-value"] [ text value ]
-     ]
-
-
 subscriptions: Model -> Sub Msg
 subscriptions model =
   if model.state == Running then
