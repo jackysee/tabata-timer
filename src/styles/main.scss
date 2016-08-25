@@ -31,21 +31,6 @@ body{
   }
 }
 
-.stage{
-
-  &.is-prepare{
-    background-color: #ececec;
-  }
-
-  &.is-work{
-    background-color: lighten(red, 30%);
-  }
-
-  &.is-rest{
-    background-color: lighten(#3D9970, 10%);
-  }
-}
-
 
 
 .config-row{
@@ -131,13 +116,33 @@ button[disabled]{
 }
 
 .duration-num{
-  font-size: 5rem;
+  font-size: 7rem;
 }
 
 .duration-denom{
-  font-size: 1.4rem;
+  font-size: 3rem;
   color: #444;
 }
+
+.stage{
+
+  &.is-prepare{
+    background-color: #ececec;
+  }
+
+  &.is-work{
+    background-color: lighten(red, 30%);
+  }
+
+  &.is-rest{
+    background-color: lighten(#3D9970, 10%);
+  }
+}
+
+.stage-section{
+  min-width: calc( 30rem + 3vw );
+}
+
 
 .stage-info-wrap{
   display: flex;
