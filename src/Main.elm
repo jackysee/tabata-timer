@@ -1,11 +1,11 @@
+port module Main exposing (main)
 
 import Html exposing (Html, div, text, button, span)
 import Html.App as App
 import Html.Events exposing ( onClick, onInput )
 import Html.Attributes exposing ( disabled, style, class )
 import Time exposing (Time, second)
-import Result
-import Config
+import NumberInput exposing (intInput)
 import String exposing (padLeft)
 import Sounds exposing (play, preload, playSounds)
 
@@ -29,6 +29,14 @@ type Stage
   | Work
   | Rest
 
+type alias Config =
+  { prepare: Int
+  , rest: Int
+  , work: Int
+  , cycles: Int
+  , tabata: Int
+  }
+
 type alias Progress =
   { stage: Stage
   , cycle: Int
@@ -39,13 +47,13 @@ type alias Progress =
 
 type alias Model =
   { total : Int
-  , config : Config.Model
+  , config : Config
   , state : State
   , progress: Progress
   }
 
 
-init: Maybe Config.Model -> (Model, Cmd Msg)
+init: Maybe Config -> (Model, Cmd Msg)
 init config =
   let
     config' =
@@ -74,7 +82,7 @@ init config =
   )
 
 
-calculateTotal: Config.Model -> Int
+calculateTotal: Config -> Int
 calculateTotal config =
   let {prepare, work, rest, cycles, tabata} = config in
     (prepare + (work + rest) * cycles) * tabata
@@ -139,81 +147,102 @@ getProgressCount progress duration =
 
 -- UPDATE
 type Msg
-  = ConfigMsg Config.Msg
+  --config
+  = SetPrepare Int
+  | SetRest Int
+  | SetWork Int
+  | SetCycles Int
+  | SetTabata Int
+  -- progress
   | Start
   | PauseResume
   | Stop
+  -- tick
   | Tick Time
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
-  case msg of
-    ConfigMsg subMsg ->
-      let config' = Config.update subMsg model.config in
-        ( { model | config = config'
-                  , total = calculateTotal config'
-          }
-        , Config.saveConfig config'
-        )
-    Start ->
-      let model' = reset model in
-        ( { model' | state = Running }, play [ Sounds.startSession ] )
-    PauseResume ->
-      if model.state == Running then
-        ( { model | state = Paused }, play [ Sounds.pauseSession ] )
-      else
-        ( { model | state = Running }, play [ Sounds.resumeSession ] )
-    Stop ->
-      ( reset model , play [Sounds.stopSession] )
-    Tick t ->
-      if model.progress.count < model.total then
-        let
-          progress = tickProgress model
-          model' = { model | progress = progress }
-        in
-          if progress.stage == Prepare then
-              ( model'
-              , playSounds
-                  [ ( progress.timeLeft == 3
-                    , [ Sounds.countdown ]
-                    )
-                  , ( progress.timeLeft == model.config.prepare && progress.tabata > 1
-                    , [ Sounds.tabataComplete ]
-                    )
-                  ]
-              )
-          else if progress.stage == Work then
-              ( model'
-              , playSounds
-                  [ ( progress.timeLeft == model.config.work
-                    , [ Sounds.start
-                      , Sounds.work
-                      ]
-                    )
-                  , ( progress.timeLeft == 3
-                    , [ Sounds.countdown ]
-                    )
-                  ]
-              )
-          else
-              ( model'
-              , playSounds
-                  [ ( progress.timeLeft == model.config.rest
-                    , [ Sounds.end
-                      , Sounds.rest
-                      ]
-                    )
-                  , ( progress.timeLeft == 3
-                    , [ Sounds.countdown ]
-                    )
-                  ]
-              )
-      else if model.progress.count == model.total then
-        ( reset model, play [Sounds.endSession] )
-      else
-        ( model, Cmd.none )
+  let
+    config = model.config
+  in
+    case msg of
+      SetPrepare val ->
+        updateConfig model {config | prepare = val }
+      SetRest val ->
+        updateConfig model {config | rest = val}
+      SetWork val ->
+        updateConfig model {config | work = val}
+      SetCycles val ->
+        updateConfig model {config | cycles = val}
+      SetTabata val ->
+        updateConfig model {config | tabata = val}
+      Start ->
+        let model' = reset model in
+          ( { model' | state = Running }, play [ Sounds.startSession ] )
+      PauseResume ->
+        if model.state == Running then
+          ( { model | state = Paused }, play [ Sounds.pauseSession ] )
+        else
+          ( { model | state = Running }, play [ Sounds.resumeSession ] )
+      Stop ->
+        ( reset model , play [Sounds.stopSession] )
+      Tick t ->
+        if model.progress.count < model.total then
+          let
+            progress = tickProgress model
+            model' = { model | progress = progress }
+          in
+            if progress.stage == Prepare then
+                ( model'
+                , playSounds
+                    [ ( progress.timeLeft == 3
+                      , [ Sounds.countdown ]
+                      )
+                    , ( progress.timeLeft == model.config.prepare && progress.tabata > 1
+                      , [ Sounds.tabataComplete ]
+                      )
+                    ]
+                )
+            else if progress.stage == Work then
+                ( model'
+                , playSounds
+                    [ ( progress.timeLeft == model.config.work
+                      , [ Sounds.start
+                        , Sounds.work
+                        ]
+                      )
+                    , ( progress.timeLeft == 3
+                      , [ Sounds.countdown ]
+                      )
+                    ]
+                )
+            else
+                ( model'
+                , playSounds
+                    [ ( progress.timeLeft == model.config.rest
+                      , [ Sounds.end
+                        , Sounds.rest
+                        ]
+                      )
+                    , ( progress.timeLeft == 3
+                      , [ Sounds.countdown ]
+                      )
+                    ]
+                )
+        else if model.progress.count == model.total then
+          ( reset model, play [Sounds.endSession] )
+        else
+          ( model, Cmd.none )
 
+
+updateConfig : Model -> Config -> (Model, Cmd Msg)
+updateConfig model config =
+  ({ model | config = config
+           , total = calculateTotal config
+   }
+   , saveConfig config
+   )
 
 view : Model -> Html Msg
 view model =
@@ -223,7 +252,7 @@ view model =
     div [class "container "]
       [ div [ class "section-box" ]
           [ div [ class "section" ]
-            [ App.map ConfigMsg (Config.view model.config)
+            [ renderConfig model.config
             , div [ class "duration" ]
                 [ div [class "duration-label "] [ text "Duration" ]
                 , div [class "duration-value" ] [ text <| renderAsTime model.total  ]
@@ -247,6 +276,24 @@ view model =
       ]
 
 
+renderConfig: Config -> Html Msg
+renderConfig config =
+  div []
+  [ makeRow "Prepare" SetPrepare config.prepare
+  , makeRow "Rest" SetRest config.rest
+  , makeRow "Work" SetWork config.work
+  , makeRow "Cycles" SetCycles config.cycles
+  , makeRow "Tabatas" SetTabata config.tabata
+  ]
+
+makeRow: String -> (Int -> Msg) -> Int -> Html Msg
+makeRow label msg model =
+  div [class "config-row"]
+    [ div [class "config-label"] [text label]
+    , div [class "config-input"] [intInput msg model]
+    ]
+
+
 renderAsTime: Int -> String
 renderAsTime seconds =
   (seconds // 60 |> toString |> padLeft 2 '0')
@@ -265,7 +312,7 @@ renderStageClass stopped stage =
       Rest -> "is-rest"
 
 
-renderStage: Progress -> Config.Model -> Html Msg
+renderStage: Progress -> Config -> Html Msg
 renderStage progress config =
   div []
     [ div []
@@ -307,3 +354,7 @@ subscriptions model =
     Time.every second Tick
   else
     Sub.none
+
+
+
+port saveConfig: Config -> Cmd msg
