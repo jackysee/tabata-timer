@@ -24,7 +24,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
     "html-webpack-plugin": "^2.17.0",
-    "node-sass": "^3.7.0",
+    "node-sass": "4.7.2",
     "postcss-loader": "^0.9.1",
     "rimraf": "^2.5.2",
     "sass-loader": "^3.2.0",
@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "elm": "0.18.0",
-    "howler": "2.0.0",
+    "howler": "2.0.9",
     "normalize.css": "4.2.0"
   }
 }
