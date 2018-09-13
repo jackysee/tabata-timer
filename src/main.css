@@ -2,10 +2,12 @@ html {
   line-height: 1.15; /* 1 */
   -webkit-text-size-adjust: 100%; /* 2 */
 }
+
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
 }
+
 button {
   font-family: inherit; /* 1 */
   font-size: 100%; /* 1 */
@@ -15,13 +17,16 @@ button {
   text-transform: none;
   -webkit-appearance: button;
 }
+
 button::-moz-focus-inner{
   border-style: none;
   padding: 0;
 }
+
 button:-moz-focusring{
   outline: 1px dotted ButtonText;
 }
+
 [type="number"]::-webkit-inner-spin-button,
 [type="number"]::-webkit-outer-spin-button {
   height: auto;
@@ -31,17 +36,12 @@ button:-moz-focusring{
   box-sizing: border-box;
 }
 
-.container{
-  position: relative;
-}
-
 .section-box{
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
   width: 100vw;
-  padding: 0;
   transition: transform 0.4s ease-in-out;
   position: absolute;
   top: 0;
@@ -53,8 +53,6 @@ button:-moz-focusring{
   transform: translateY(-100%);
 }
 
-
-
 .config-row{
   display: flex;
   font-size: 2rem;
@@ -63,13 +61,11 @@ button:-moz-focusring{
   justify-content: space-around;
 }
 
-
 .config-label{
   flex: auto;
   line-height: 30px;
   margin-right: 13px;
 }
-
 
 .int-input{
   display: flex;
@@ -87,29 +83,31 @@ button:-moz-focusring{
 .int-input button:hover{
   background: #ededed;
 }
+
 .int-input button:focus{
   outline: none;
 }
 
-.int-input input{
-    width: 4rem;
-    font-size: 2rem;
-    text-align: center;
-    height: 100%;
-    flex: auto;
-    border: none;
-    border-bottom: 1px solid #ccc;
-    background-color: transparent;
-    text-align: center;
-    -moz-appearance: textfield;
+.input-number-no-spin{
+  width: 4rem;
+  font-size: 2rem;
+  text-align: center;
+  height: 100%;
+  flex: auto;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  background-color: transparent;
+  text-align: center;
+  -moz-appearance: textfield;
 }
 
-.int-input input::-webkit-outer-spin-button,
-.int-input input::-webkit-inner-spin-button {
+.input-number-no-spin::-webkit-outer-spin-button,
+.input-number-no-spin::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-.int-input input:focus{
+
+.input-number-no-spin:focus{
   outline: none;
   border-bottom-color: blue;
 }
@@ -144,7 +142,6 @@ button[disabled]{
   color: #444;
 }
 
-
 .stage.is-prepare{
   background-color: #ececec;
 }
@@ -171,6 +168,7 @@ button[disabled]{
 .stage-info-wrap{
   display: flex;
 }
+
 .stage-info{
   width: 50%;
 }
@@ -179,6 +177,7 @@ button[disabled]{
   margin-top: 1rem;
   line-height: 1.8rem;
 }
+
 .buttons .btn{
   margin-bottom: 5px;
 }
@@ -189,10 +188,12 @@ button[disabled]{
   background: #555;
   color: white;
 }
+
 .btn-lg{
   width: 100%;
   font-size: 1.4rem;
 }
+
 .btn-start{
   padding: 1rem;
 }

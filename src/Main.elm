@@ -3,7 +3,7 @@ port module Main exposing (main)
 import Browser
 import Html exposing (Html, div, text, button, span)
 import Html.Events exposing (onClick, onInput)
-import Html.Attributes exposing (disabled, style, class)
+import Html.Attributes exposing (class)
 import Time exposing (Posix)
 import NumberInput exposing (intInput)
 import String exposing (padLeft, fromInt)
