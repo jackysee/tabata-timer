@@ -28,6 +28,5 @@ app.ports.play.subscribe(function(paths) {
 });
 
 app.ports.saveConfig.subscribe(function(config) {
-  console.log('saveconfig', config);
   localStorage.setItem('config', JSON.stringify(config));
 });
