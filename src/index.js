@@ -1,18 +1,20 @@
-// pull in desired CSS/SASS files
-require( './styles/main.scss' );
+import './main.css';
+import { Elm } from './Main.elm';
+import registerServiceWorker from './registerServiceWorker';
 
-var Howl = require('howler').Howl;
-
-// inject bundled Elm app into div#main
-var Elm = require( './Main' );
 const config = localStorage.getItem('config');
-const startingConfig = config ? JSON.parse(config) : null;
-var app = Elm.Main.embed( document.getElementById( 'main' ), startingConfig);
+
+var app = Elm.Main.init({
+  node: document.getElementById('root'),
+  flags: config? JSON.parse(config) : null
+});
+
+registerServiceWorker();
 
 var sounds = {};
 app.ports.preload.subscribe(function(files){
   files.forEach(function(path){
-    sounds[path] = new Howl({src:[path], preload:true});
+    sounds[path] = new Audio(path);
   });
 });
 
@@ -28,4 +30,4 @@ app.ports.play.subscribe(function(paths) {
 app.ports.saveConfig.subscribe(function(config) {
   console.log('saveconfig', config);
   localStorage.setItem('config', JSON.stringify(config));
-})
+});

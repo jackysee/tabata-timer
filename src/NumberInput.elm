@@ -3,12 +3,12 @@ module NumberInput exposing (intInput)
 import Html exposing (Html, div, button, input, text)
 import Html.Attributes exposing (value, type_, class)
 import Html.Events exposing (onClick, onInput)
-import String exposing (toInt)
+import String exposing (toInt, fromInt)
 
 
 setInt : (Int -> msg) -> String -> msg
 setInt msg_ input =
-    input |> toInt |> Result.withDefault 0 |> msg_
+    input |> toInt |> Maybe.withDefault 0 |> msg_
 
 
 decrease : Int -> Int
@@ -22,7 +22,7 @@ intInput msg val =
         [ button [ val |> decrease |> msg |> onClick ] [ text "-" ]
         , input
             [ onInput (setInt msg)
-            , value (toString val)
+            , value (fromInt val)
             , type_ "number"
             , class "input-number-no-spin"
             ]

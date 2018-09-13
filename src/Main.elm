@@ -1,11 +1,12 @@
 port module Main exposing (main)
 
+import Browser
 import Html exposing (Html, div, text, button, span)
 import Html.Events exposing (onClick, onInput)
 import Html.Attributes exposing (disabled, style, class)
-import Time exposing (Time, second)
+import Time exposing (Posix)
 import NumberInput exposing (intInput)
-import String exposing (padLeft)
+import String exposing (padLeft, fromInt)
 import Sounds exposing (play, preload, playSounds)
 
 
@@ -13,7 +14,7 @@ import Sounds exposing (play, preload, playSounds)
 
 
 main =
-    Html.programWithFlags
+    Browser.element
         { init = init
         , view = view
         , update = update
@@ -60,12 +61,12 @@ type alias Model =
 
 
 init : Maybe Config -> ( Model, Cmd Msg )
-init config =
+init maybeConfig =
     let
         config_ =
-            case config of
-                Just config ->
-                    config
+            case maybeConfig of
+                Just justConfig ->
+                    justConfig
 
                 Nothing ->
                     { prepare = 10
@@ -170,7 +171,7 @@ getProgressCount : Int -> Int -> Int
 getProgressCount progress duration =
     let
         remain =
-            progress % duration
+            remainderBy duration progress
     in
         if remain == 0 then
             duration
@@ -195,7 +196,7 @@ type
     | PauseResume
     | Stop
       -- tick
-    | Tick Time
+    | Tick Posix
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -358,9 +359,9 @@ makeRow label msg model =
 
 renderAsTime : Int -> String
 renderAsTime seconds =
-    (seconds // 60 |> toString |> padLeft 2 '0')
+    (seconds // 60 |> fromInt |> padLeft 2 '0')
         ++ ":"
-        ++ (seconds % 60 |> toString |> padLeft 2 '0')
+        ++ (remainderBy 60 seconds |> fromInt |> padLeft 2 '0')
 
 
 renderStageClass : Bool -> Stage -> String
@@ -392,15 +393,15 @@ renderStage progress config =
             [ div [ class "duration stage-info" ]
                 [ div [ class "duration-label" ] [ text "Cycle" ]
                 , div [ class "duration-value" ]
-                    [ span [ class "duration-num" ] [ text <| toString progress.cycle ]
-                    , span [ class "duration-denom" ] [ text <| "/" ++ toString config.cycles ]
+                    [ span [ class "duration-num" ] [ text <| fromInt progress.cycle ]
+                    , span [ class "duration-denom" ] [ text <| "/" ++ fromInt config.cycles ]
                     ]
                 ]
             , div [ class "duration stage-info" ]
                 [ div [ class "duration-label" ] [ text "Tabata " ]
                 , div [ class "duration-value" ]
-                    [ span [ class "duration-num" ] [ text <| toString progress.tabata ]
-                    , span [ class "duration-denom" ] [ text <| "/" ++ toString config.tabata ]
+                    [ span [ class "duration-num" ] [ text <| fromInt progress.tabata ]
+                    , span [ class "duration-denom" ] [ text <| "/" ++ fromInt config.tabata ]
                     ]
                 ]
             ]
@@ -423,7 +424,7 @@ renderStageLabel stage =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     if model.state == Running then
-        Time.every second Tick
+        Time.every 1000 Tick
     else
         Sub.none
 

@@ -66,11 +66,11 @@ playSounds conditions =
         [] ->
             Cmd.none
 
-        first :: rest ->
+        first :: tails ->
             if (Tuple.first first) then
                 play (Tuple.second first)
             else
-                playSounds rest
+                playSounds tails
 
 
 port preload : List String -> Cmd msg
