@@ -4,13 +4,15 @@
   "description": "Tabata Timer in Elm",
   "scripts": {
     "start": "elm-app start",
-    "build": "rimraf build && elm-app build",
+    "prebuild": "rimraf build",
+    "build": "cross-env PUBLIC_URL=./ elm-app build",
     "build-page": "rimraf docs && mkdir docs && npm run build && cp -R build/* docs",
     "surge": "npx surge docs --domain tabatatimer.surge.sh"
   },
   "author": "Jacky See",
   "license": "ISC",
   "devDependencies": {
+    "cross-env": "5.2.0",
     "rimraf": "2.6.2"
   },
   "dependencies": {}
