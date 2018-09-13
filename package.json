@@ -5,7 +5,8 @@
   "scripts": {
     "start": "elm-app start",
     "build": "rimraf build && elm-app build",
-    "build-page": "rimraf docs && mkdir docs && npm run build && cp -R build/* docs"
+    "build-page": "rimraf docs && mkdir docs && npm run build && cp -R build/* docs",
+    "surge": "npx surge docs --domain tabatatimer.surge.sh"
   },
   "author": "Jacky See",
   "license": "ISC",
